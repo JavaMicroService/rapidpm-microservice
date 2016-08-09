@@ -54,7 +54,7 @@ public class BasicAdministrationTest extends BasicRestTest {
     System.out.println("generateBasicReqURL = " + generateBasicReqURL);
     final Builder authcode = client
         .target(generateBasicReqURL)
-        .path("100")
+        .path("1000")
         .request();
     final Response response = authcode.get();
 
@@ -62,7 +62,7 @@ public class BasicAdministrationTest extends BasicRestTest {
     String val = response.getStatusInfo().toString();
     System.out.println("response status info = " + val);
     client.close();
-    Thread.sleep(1_000);
+    Thread.sleep(3_000);
   }
 
 } 

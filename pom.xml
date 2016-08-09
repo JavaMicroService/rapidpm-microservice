@@ -25,14 +25,14 @@
   <parent>
     <groupId>org.rapidpm</groupId>
     <artifactId>rapidpm-dependencies</artifactId>
-    <version>3.0.6</version>
+    <version>3.1.0</version>
   </parent>
 
 
   <groupId>org.rapidpm.microservice</groupId>
   <artifactId>rapidpm-microservice</artifactId>
   <packaging>pom</packaging>
-  <version>0.1.0</version>
+  <version>0.5.0</version>
 
   <modules>
     <module>modules</module>
@@ -116,7 +116,6 @@
               </transformers>
               <minimizeJar>false</minimizeJar>
               <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
-              <createSourcesJar>true</createSourcesJar>
               <shadeSourcesContent>false</shadeSourcesContent>
               <filters>
                 <filter>

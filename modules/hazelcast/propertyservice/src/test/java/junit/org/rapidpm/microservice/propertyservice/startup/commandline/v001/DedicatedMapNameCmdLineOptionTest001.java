@@ -1,12 +1,11 @@
-package junit.org.rapidpm.microservice.propertyservice.startup;
+package junit.org.rapidpm.microservice.propertyservice.startup.commandline.v001;
 
 import junit.org.rapidpm.microservice.BasicRestTest;
 import org.apache.commons.cli.Option;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.rapidpm.microservice.optionals.cli.CmdLineStartupAction;
-import org.rapidpm.microservice.propertyservice.startup.DedicatedMapNameCmdLineOption;
+import org.rapidpm.microservice.propertyservice.startup.commandline.DedicatedMapNameCmdLineOption;
 
 import java.util.List;
 

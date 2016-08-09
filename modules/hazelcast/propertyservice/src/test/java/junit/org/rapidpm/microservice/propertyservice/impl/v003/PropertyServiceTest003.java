@@ -18,8 +18,8 @@ public class PropertyServiceTest003 /* extends BaseDITest */ {
   @Before
   public void setUp() throws Exception {
 
-    System.setProperty("file", this.getClass().getResource("").getPath());
-    System.setProperty("distributed", "true");
+    System.setProperty("propertyservice.propertyfolder", this.getClass().getResource("").getPath());
+    System.setProperty("propertyservice.distributed", "true");
 
     DI.clearReflectionModel();
     DI.activatePackages(this.getClass());

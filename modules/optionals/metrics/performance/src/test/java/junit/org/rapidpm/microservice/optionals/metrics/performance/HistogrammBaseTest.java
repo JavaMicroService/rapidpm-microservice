@@ -50,7 +50,8 @@ public class HistogrammBaseTest extends BasicRestTest {
     final Client client = ClientBuilder.newClient();
     final WebTarget target = client.target(generateBasicReqURL);
 
-    IntStream.range(0, endExclusive)
+    IntStream
+        .range(0, endExclusive)
         .forEach(i -> target.request().get(String.class));
     client.close();
     return endExclusive;

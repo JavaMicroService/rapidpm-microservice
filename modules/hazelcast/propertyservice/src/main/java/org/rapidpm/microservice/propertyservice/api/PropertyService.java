@@ -3,6 +3,8 @@ package org.rapidpm.microservice.propertyservice.api;
 import org.rapidpm.proxybuilder.staticgenerated.annotations.StaticMetricsProxy;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,4 +29,6 @@ public interface PropertyService {
   void forget();
 
   void shutdown();
+
+  File getConfigurationFile(String filename) throws IOException;
 }

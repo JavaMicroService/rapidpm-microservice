@@ -1,4 +1,4 @@
-package junit.org.rapidpm.microservice.propertyservice.rest;
+package junit.org.rapidpm.microservice.propertyservice.rest.v002;
 
 
 import junit.org.rapidpm.microservice.BasicRestTest;
@@ -23,8 +23,8 @@ public class RestTest002 extends BasicRestTest {
     super.setUp();
     DI.activateDI(new PropertiesFileLoader());
     DI.registerClassForScope(PropertyServiceImpl.class, JVMSingletonInjectionScope.class.getSimpleName());
-    System.setProperty("mapname", RestTest002.class.getSimpleName());
-    System.setProperty("file", this.getClass().getResource("").getPath());
+    System.setProperty("propertyservice.mapname", RestTest002.class.getSimpleName());
+    System.setProperty("propertyservice.propertyfolder", this.getClass().getResource("").getPath());
   }
 
   @Override

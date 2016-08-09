@@ -36,6 +36,8 @@ import org.rapidpm.microservice.optionals.header.HeaderScreenPrinter;
 import org.rapidpm.microservice.rest.JaxRsActivator;
 import org.rapidpm.microservice.rest.ddi.DdiInjectorFactory;
 import org.rapidpm.microservice.servlet.ServletInstanceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -51,22 +53,23 @@ import static io.undertow.servlet.Servlets.*;
 
 public class Main {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-  public static final String MYAPP = "/microservice";
-  public static final String CONTEXT_PATH_REST = "/rest";
+  public static final String MYAPP = "/microservice"; //TODO extract to Optional - Servlet
+  public static final String CONTEXT_PATH_REST = "/rest"; //TODO extract to Optional - REST
 
-  public static final int DEFAULT_REST_PORT = 7081;
-  public static final int DEFAULT_SERVLET_PORT = 7080;
-  public static final String REST_PORT_PROPERTY = "org.rapidpm.microservice.rest.port";
-  public static final String REST_HOST_PROPERTY = "org.rapidpm.microservice.rest.host";
-  public static final String SERVLET_PORT_PROPERTY = "org.rapidpm.microservice.servlet.port";
-  public static final String SERVLET_HOST_PROPERTY = "org.rapidpm.microservice.servlet.host";
+  public static final int DEFAULT_REST_PORT = 7081; //TODO extract to Optional - REST
+  public static final int DEFAULT_SERVLET_PORT = 7080; //TODO extract to Optional - Servlet
+  public static final String REST_PORT_PROPERTY = "org.rapidpm.microservice.rest.port"; //TODO extract to Optional - REST
+  public static final String REST_HOST_PROPERTY = "org.rapidpm.microservice.rest.host"; //TODO extract to Optional - REST
+  public static final String SERVLET_PORT_PROPERTY = "org.rapidpm.microservice.servlet.port"; //TODO extract to Optional - Servlet
+  public static final String SERVLET_HOST_PROPERTY = "org.rapidpm.microservice.servlet.host"; //TODO extract to Optional - Servlet
   public static final String DEFAULT_HOST = "0.0.0.0";
-  private static final String RESTEASY_PORT_PROPERTY = "org.jboss.resteasy.port";
-  private static final String RESTEASY_HOST_PROPERTY = "org.jboss.resteasy.host";
+  private static final String RESTEASY_PORT_PROPERTY = "org.jboss.resteasy.port"; //TODO extract to Optional - REST
+  private static final String RESTEASY_HOST_PROPERTY = "org.jboss.resteasy.host"; //TODO extract to Optional - REST
   private static final Timer TIMER = new Timer(true);
-  private static UndertowJaxrsServer jaxrsServer;
-  private static Undertow undertowServer;
+  private static UndertowJaxrsServer jaxrsServer; //TODO extract to Optional - REST
+  private static Undertow undertowServer; //TODO extract to Optional - Servlet
   private static Optional<String[]> cliArguments;
   private static LocalDateTime deployStart;
 
@@ -81,10 +84,10 @@ public class Main {
   public static void deploy(Optional<String[]> args) {
     cliArguments = args;
     deployStart = LocalDateTime.now();
-    DI.bootstrap(); // per config steuern
     executeStartupActions(args);
+    DI.bootstrap(); // per config steuern
 
-    final Builder builder = Undertow.builder()
+    final Builder builder = Undertow.builder() //TODO optional
         .setDirectBuffers(true)
         .setServerOption(UndertowOptions.ENABLE_HTTP2, true);
 
@@ -96,7 +99,7 @@ public class Main {
         deployServlets(builder, deploymentInfo);
       } catch (ServletException e) {
         e.printStackTrace();
-        //TODO logging message
+        LOGGER.error("deploy Servlets ", e);
       }
     }
 
@@ -159,11 +162,8 @@ public class Main {
 
     final Set<Class<?>> weblisteners = DI.getTypesAnnotatedWith(WebListener.class);
     final List<ListenerInfo> listenerInfos = weblisteners.stream()
-        .map(c -> {
-          return new ListenerInfo((Class<? extends EventListener>) c);
-        })
+        .map(c -> new ListenerInfo((Class<? extends EventListener>) c))
         .collect(Collectors.toList());
-
 
     return deployment()
         .setClassLoader(Main.class.getClassLoader())
@@ -226,10 +226,13 @@ public class Main {
   }
 
   public static void stop(long delayMS) {
-    System.out.println("shutdown delay [ms] = " + delayMS);
+    LOGGER.warn("shutdown delay [ms] = " + delayMS);
+    if (delayMS < 1_000) delayMS = delayMS + 1_000;
+
     TIMER.schedule(new TimerTask() {
       @Override
       public void run() {
+        LOGGER.warn("delayed shutdown  now = " + LocalDateTime.now());
         stop();
       }
     }, delayMS);
@@ -237,12 +240,19 @@ public class Main {
 
   public static void stop() {
     executeShutdownActions(cliArguments);
-
     if (jaxrsServer != null) {
       if (new JaxRsActivator().somethingToDeploy())
-        jaxrsServer.stop();
+        try {
+          jaxrsServer.stop();
+        } catch (Exception e) {
+          LOGGER.error("jaxrsServer.stop()", e);
+        }
     } else if (undertowServer != null) {
-      undertowServer.stop();
+      try {
+        undertowServer.stop();
+      } catch (Exception e) {
+        LOGGER.error("undertowServer.stop()", e);
+      }
     }
   }
 

@@ -58,15 +58,6 @@ public class ActiveUrlsDetector {
     final String realServletPort = System.getProperty(Main.SERVLET_PORT_PROPERTY, Main.DEFAULT_SERVLET_PORT + "");
     final String realServletHost = System.getProperty(Main.SERVLET_HOST_PROPERTY, Main.DEFAULT_HOST);
 
-//    for (Class<?> aClass : typesAnnotatedWith) {
-//      final WebServlet annotation = aClass.getAnnotation(WebServlet.class);
-//      final String[] urlPatterns = annotation.urlPatterns();
-//      for (String urlPattern : urlPatterns) {
-//        String url = "http://" + realServletHost + ":" + realServletPort + Main.MYAPP + urlPattern;
-//        activeUrlsHolder.addServletUrl(url);
-//      }
-//    }
-
     typesAnnotatedWith
         .stream()
         .map(c -> c.getAnnotation(WebServlet.class))
@@ -74,8 +65,6 @@ public class ActiveUrlsDetector {
         .map(Arrays::asList)
         .flatMap(Collection::stream)
         .forEach(url -> activeUrlsHolder.addServletUrl("http://" + realServletHost + ":" + realServletPort + Main.MYAPP + url));
-
-
 
     final Executor executorREST = activeUrlsHolder::addRestUrl;
     jaxRsActivator

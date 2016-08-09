@@ -31,27 +31,27 @@ import java.util.List;
 
 public class Histogramms001Test extends HistogrammBaseTest {
 
-  @Override
-  @Before
-  public void setUp() throws Exception {
-    super.setUp();
-  }
+
 
   @Test
   public void test001() throws Exception {
 
-    final String result = requestWithCheck(generateBasicReqURL(Histogramms.class) + "/" + Histogramms.LIST_ALL_HISTOGRAMMS);
+    final String generateBasicReqURL = generateBasicReqURL(Histogramms.class);
+    System.out.println("generateBasicReqURL = " + generateBasicReqURL);
+
+    final String result = requestWithCheck(generateBasicReqURL + "/" + Histogramms.LIST_ALL_HISTOGRAMMS);
     final List<HistogrammSnapshot> histogrammSnapshots = new Gson().fromJson(result, Histogramms.HISTORY_SNAPSHOT_LIST_TYPE);
     Assert.assertTrue(histogrammSnapshots.isEmpty());
 
     DI.activateMetrics(TestRessource.class);
+
     runRequests();
-    final String resultWithMetrics = requestWithCheck(generateBasicReqURL(Histogramms.class) + "/" + Histogramms.LIST_ALL_HISTOGRAMMS);
+
+    final String resultWithMetrics = requestWithCheck(generateBasicReqURL + "/" + Histogramms.LIST_ALL_HISTOGRAMMS);
     Assert.assertNotNull(resultWithMetrics);
     final List<HistogrammSnapshot> histogrammSnapshotsWithMetrics = new Gson().fromJson(resultWithMetrics, Histogramms.HISTORY_SNAPSHOT_LIST_TYPE);
     Assert.assertNotNull(histogrammSnapshotsWithMetrics);
     Assert.assertFalse(histogrammSnapshotsWithMetrics.isEmpty());
-
 
     for (HistogrammSnapshot histogrammSnapshot : histogrammSnapshots) {
       Assert.assertNotNull(histogrammSnapshot);

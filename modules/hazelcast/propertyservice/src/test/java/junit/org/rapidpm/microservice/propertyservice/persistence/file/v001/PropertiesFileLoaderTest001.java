@@ -1,4 +1,4 @@
-package junit.org.rapidpm.microservice.propertyservice.persistence.file;
+package junit.org.rapidpm.microservice.propertyservice.persistence.file.v001;
 
 import org.junit.Assert;
 import org.junit.Before;

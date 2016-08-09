@@ -23,8 +23,8 @@ public class PropertyServiceTest002 /*extends BaseDITest*/ {
   @Before
   public void setUp() {
 
-    System.setProperty("mapname", this.getClass().getSimpleName());
-    System.setProperty("file", PropertyServiceTest002.class.getResource("").getPath());
+    System.setProperty("propertyservice.mapname", this.getClass().getSimpleName());
+    System.setProperty("propertyservice.propertyfolder", PropertyServiceTest002.class.getResource("").getPath());
 
     DI.clearReflectionModel();
     DI.activatePackages(this.getClass());
